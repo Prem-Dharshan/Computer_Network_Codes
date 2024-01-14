@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 *.ini
-/desktop.ini
+desktop.ini
 
 # Distribution / packaging
 .Python
