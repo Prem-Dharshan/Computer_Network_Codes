@@ -1,70 +1,60 @@
-from sys import stderr
 from colorama import Fore
 
+
 def xor(a, b):
-
     result = []
-
-    for i in range(1, len(b)):
-        if a[i] == b[i]:
-            result.append('0')
-        else:
-            result.append('1')
-
+    for i in range(max(len(a), len(b))):
+        bit_a = a[i] if i < len(a) else '0'
+        bit_b = b[i] if i < len(b) else '0'
+        result.append('1' if bit_a != bit_b else '0')
     return ''.join(result)
 
+
 def divide(dividend, divisor):
-
     n = len(divisor)
-
     tm = dividend[0:n]
 
-    while (n < len(dividend)):
-        if tm[0] == '1':
-            tm = xor(divisor, tm) + dividend[n]
-        else:
-            tm = xor('0'*n, tm) + dividend[n]
+    while n < len(dividend):
+        tm = xor(divisor, tm.ljust(len(divisor), '0')) + dividend[n]
         n += 1
-    if tm[0] == '1':
-        tm = xor(divisor, tm)
-    else:
-        tm = xor('0'*n, tm)
 
-    c = tm
-    print("Redundancy bit:", c)
-    return c
+    tm = xor(divisor, tm.ljust(len(divisor), '0'))
 
-def endatacode(data, key, remainder):
+    return tm
 
-    a_data = data + remainder
-    remainder = divide(a_data, key)
-    code = remainder
 
-    return code
+def add_remainder(data, key, remainder):
+    encoded_data = data + remainder
+    current_remainder = divide(encoded_data, key)
+    return current_remainder
 
-def enndatacode(data, key):
+
+def add_remainder_to_data(data, key):
     s = len(key)
-    a_data = data + "0" * (s-1)
-    re = divide(a_data, key)
+    encoded_data = data + "0" * (s - 1)
+    remainder = divide(encoded_data, key)
+    return remainder
 
-    return re
+
+def calculate_crc(data, key):
+    current_remainder = add_remainder_to_data(data, key)
+    return current_remainder
 
 
 def main():
-
     data = input("Enter the data to be transmitted: ")
     key = input("Enter the key: ")
 
-    ans = enndatacode(data, key)
-    print("The data to be transmitted: ", data+ans)
+    current_remainder = calculate_crc(data, key)
+    print("The data to be transmitted: ", data + current_remainder)
 
-    data1 = input("Enter the recieved data: ")
-    ans1 = endatacode(data1, key, ans)
+    received_data = input("Enter the received data: ")
+    calculated_remainder = add_remainder(data, key, current_remainder)
 
-    if (ans1 == len(ans1) * "0"):
-        print("The data doesn't have any errors")
+    if calculated_remainder == len(calculated_remainder) * "0":
+        print("The data doesn't have any errors.")
     else:
-        print(Fore.RED + "The data has errors")
+        print(f"{Fore.RED}The data has errors.")
 
 
 if __name__ == "__main__":

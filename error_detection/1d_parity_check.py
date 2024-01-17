@@ -1,53 +1,33 @@
-
 def add_parity(data: str, parity: int) -> str:
-    sum = 0
-    for i in data:
-        if i == "1":
-            sum += 1
+    count_ones = data.count('1')
 
-    if (parity == 1):
-        if (sum % 2 == 1):
-            data += "0"
-        else:
-            data += "1"
+    if (parity == 1 and count_ones % 2 == 1) or (parity == 0 and count_ones % 2 == 0):
+        data += "0"
     else:
-        if (sum % 2 == 0):
-            data += "0"
-        else:
-            data += "1"
+        data += "1"
 
     return data
 
 
 def check(data: str, parity: int) -> bool:
+    count_ones = data[:-1].count('1')
 
-    sum = 0
-    for i in data[:-1]:
-        if i == "1":
-            sum += 1
-
-    if (parity == 1):
-        if (sum % 2 == 1 and data[-1] == "0"):
-            return True
-        else:
-            return False
+    if (parity == 1 and count_ones % 2 == 1 and data[-1] == "0") or \
+       (parity == 0 and count_ones % 2 == 0 and data[-1] == "0"):
+        return True
     else:
-        if (sum % 2 == 0 and data[-1] == "0"):
-            return True
-        else:
-            return False
+        return False
 
 
 def main() -> None:
-
     tx_num: str = input("\nEnter the data to be transmitted: ").zfill(16)
     parity = int(input("Enter the parity (0 = even & 1 = odd): "))
 
     rx_num = add_parity(tx_num, parity=parity)
-    rx_num = input("Enter the recieved data: ")
+    received_data = input("Enter the received data: ")
     print(f"Given Data: {tx_num}\nTransmitted Data: {rx_num}")
 
-    print(f"1D Parity Check: {check(rx_num.zfill(16), parity=parity)}")
+    print(f"1D Parity Check: {check(received_data.zfill(16), parity=parity)}")
 
     return None
 

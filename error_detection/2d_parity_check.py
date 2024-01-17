@@ -1,6 +1,7 @@
 from typing import List
 from colorama import Fore
 
+
 def add_parity_bit(data: str, parity: int) -> str:
 
     sum: int = 0
@@ -25,11 +26,11 @@ def add_parity(data1: str, data2: str) -> str:
 
     result = ""
 
-    for i in range(-1, len(data1)):
+    for i in range(len(data1)):
         if (data1[i] == data2[i]):
-            result = "1" + result
-        else:
             result = "0" + result
+        else:
+            result = "1" + result
 
     parity_val = "0" if result.count("1") % 2 == 0 else "1"
 
@@ -40,11 +41,11 @@ def detect(data1: str, data2: str, bit) -> bool:
 
     result = ""
 
-    for i in range(-1, len(data1)):
+    for i in range(len(data1)):
         if (data1[i] == data2[i]):
-            result = "1" + result
-        else:
             result = "0" + result
+        else:
+            result = "1" + result
 
     parity_val = "0" if result.count("1") % 2 == 0 else "1"
 
@@ -70,8 +71,8 @@ def main() -> None:
     tx_data = f"{tx_num1[:-1]}{tx_num2[:-1]}{parity_bit}"
     print(f"Data to be Transmitted: {tx_data}")
 
-    rx_num1 = input("Enter the recieved data1: ")
-    rx_num2 = input("Enter the recieved data2: ")
+    rx_num1 = input("Enter the received data1: ")
+    rx_num2 = input("Enter the received data2: ")
 
     if detect(rx_num1, rx_num2, parity_bit) == True:
         print("No error")
