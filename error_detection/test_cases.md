@@ -1,7 +1,5 @@
 ## 1D PARITY CHECK
 
-Certainly! Let's create some test cases for the 1D parity check program:
-
 ### Test Case 1 (No Error):
 
 **Input:**
@@ -41,8 +39,6 @@ Certainly! Let's create some test cases for the 1D parity check program:
 
 **Result:**
 - The detected result should indicate "Error."
-
-You can use these test cases to manually verify the functionality of the 1D parity check program.
 
 ## 2D PARITY CHECK 
 
