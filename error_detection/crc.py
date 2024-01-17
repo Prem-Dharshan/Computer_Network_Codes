@@ -1,60 +1,59 @@
-from colorama import Fore
+from colorama import init, Fore
+
+init(autoreset=True)
 
 
-def xor(a, b):
-    result = []
-    for i in range(max(len(a), len(b))):
-        bit_a = a[i] if i < len(a) else '0'
-        bit_b = b[i] if i < len(b) else '0'
-        result.append('1' if bit_a != bit_b else '0')
-    return ''.join(result)
+def xor(op1, op2):
+    res = ""
+    for i in range(len(op1)):
+        if op1[i] == op2[i]:
+            res += "0"
+        else:
+            res += "1"
+    return res
 
 
 def divide(dividend, divisor):
     n = len(divisor)
-    tm = dividend[0:n]
+    n_zeros = (len(divisor) - 1) * "0"
+    dividend += n_zeros
 
-    while n < len(dividend):
-        tm = xor(divisor, tm.ljust(len(divisor), '0')) + dividend[n]
-        n += 1
+    op = dividend[0:n]
+    i = n
 
-    tm = xor(divisor, tm.ljust(len(divisor), '0'))
+    while i < len(dividend):
+        if op[0] == "0":
+            i += 1
+            op = op[1:] + (dividend[i] if i < len(dividend) else "")
+            continue
 
-    return tm
+        op = xor(op, divisor)[1:]
 
+        i += 1
+        if i < len(dividend):
+            op += dividend[i]
+        else:
+            break
 
-def add_remainder(data, key, remainder):
-    encoded_data = data + remainder
-    current_remainder = divide(encoded_data, key)
-    return current_remainder
-
-
-def add_remainder_to_data(data, key):
-    s = len(key)
-    encoded_data = data + "0" * (s - 1)
-    remainder = divide(encoded_data, key)
-    return remainder
-
-
-def calculate_crc(data, key):
-    current_remainder = add_remainder_to_data(data, key)
-    return current_remainder
+    return op
 
 
 def main():
-    data = input("Enter the data to be transmitted: ")
-    key = input("Enter the key: ")
+    dividend = input("Enter the dividend (binary): ")
+    divisor = input("Enter the divisor (binary): ")
+    n = len(divisor)
 
-    current_remainder = calculate_crc(data, key)
-    print("The data to be transmitted: ", data + current_remainder)
+    op = divide(dividend=dividend, divisor=divisor)
 
-    received_data = input("Enter the received data: ")
-    calculated_remainder = add_remainder(data, key, current_remainder)
+    appended_dividend = dividend + op
+    print("CRC bits:", Fore.GREEN + op)
+    print("Appended dividend after CRC:", Fore.GREEN + appended_dividend)
 
-    if calculated_remainder == len(calculated_remainder) * "0":
-        print("The data doesn't have any errors.")
+    received_data = input("Enter the received data (binary): ")
+    if divide(dividend=received_data, divisor=divisor) == "000":
+        print(Fore.GREEN + "Received data is correct!")
     else:
-        print(f"{Fore.RED}The data has errors.")
+        print(Fore.RED + "Received data is corrupted!")
 
 
 if __name__ == "__main__":
