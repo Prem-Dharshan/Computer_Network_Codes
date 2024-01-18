@@ -34,6 +34,7 @@ def add_checksum(data: str, k: int) -> str:
 
     inverted = ''.join('1' if bit == '0' else '0' for bit in checksum)
     checksum = data + inverted
+    print(f"Checksum: {checksum}")
 
     return checksum
 
@@ -42,18 +43,22 @@ def detect(data: str, k: int) -> bool:
     n = len(data)
     k = n // k
     sections = [data[i:i + k] for i in range(0, n, k)]
+    # print(sections)
 
     checksum = "0"
 
-    for i in range(len(sections) - 1):
+    for i in range(len(sections)):
         checksum = binary_addition(checksum, sections[i])
+        # print(checksum)
 
-    return checksum != sections[-1]
+    return checksum == (k * "1")
 
 
 def main() -> None:
+
     data = input("Enter the data to be transmitted: ")
     k = int(input("Enter the packet size (k): "))
+
     tx_data = add_checksum(data, k=k)
     print(f"\nData to be transmitted with checksum: {tx_data}")
 
@@ -61,11 +66,12 @@ def main() -> None:
 
     error = detect(rx_data, k=k + 1)
 
-    if not error:
-        print(f"\n{Fore.GREEN}The received data is error-free.")
+    if error:
+        print(f"\n{Fore.GREEN}The received data is error-free.\n")
     else:
-        print(f"\n{Fore.RED}Error detected in the received data.")
+        print(f"\n{Fore.RED}Error detected in the received data.\n")
 
+    return None
 
 if __name__ == "__main__":
     main()
