@@ -1,5 +1,5 @@
+from datetime import datetime
 import socket
-import time
 
 # Create a socket object
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -18,6 +18,10 @@ while True:
     # Establish a connection
     clientsocket, addr = serversocket.accept()
     print(f"Got a connection from {str(addr)}")
-    currentTime = time.ctime(time.time()) + "\r\n"
+
+    # Get current time
+    currentTime = datetime.now() + "\r\n"
+
+    # Send current time to client
     clientsocket.send(currentTime.encode('ascii'))
     clientsocket.close()
