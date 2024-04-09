@@ -20,8 +20,7 @@ while True:
     print(f"Got a connection from {str(addr)}")
 
     # Get current time
-    currentTime = datetime.now() + "\r\n"
-
+    currentTime = str(datetime.now())
     # Send current time to client
     clientsocket.send(currentTime.encode('ascii'))
     clientsocket.close()
